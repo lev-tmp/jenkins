@@ -1,0 +1,90 @@
+•	sudo apt-get update
+•	sudo apt-get upgrade
+•	 sudo apt-get dist-upgrade
+•	Sudo apt-get purge openjdk*
+•	Sudo apt-get install python-software-properties
+•	Sudo add-apt-repository ppa:webupd8team/java
+•	Sudo apt-get update
+•	 sudo apt-get install oracle-java8-installer -y
+•	sudo dpkg --configure -a
+•	sudo vi /etc/environment:
+•	Add:
+•	JAVA_HOME="/usr/lib/jvm/java-8-oracle/jre"
+•	Save & exit
+•	Sudo su - 
+•	vim  ~/.bashrc
+•	Add:
+•	export PATH=$JAVA_HOME/bin:$PATH
+•	export CATALINA_HOME=/opt/tomcat
+•	Save & exit
+•	source ~/.bashrc
+•	echo $JAVA_HOME
+•	groupadd tomcat
+•	useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+•	cd /opt
+•	wget http://apache.spd.co.il/tomcat/tomcat-8/v8.5.11/bin/apache-tomcat-8.5.11.tar.gz
+•	tar -xzvf apache-tomcat-8.5.11.tar.gz
+•	 mv apache-tomcat-8.5.11 tomcat
+•	 rm apache-tomcat-8.5.11.tar.gz
+•	chown -hR tomcat:tomcat tomcat
+•	chmod +x /opt/tomcat/bin
+•	echo $CATALINA_HOME
+•	cd $CATALINA_HOME/bin
+•	cd /etc/systemd/system
+•	vim tomcat.service:
+[Unit]
+Description=Apache Tomcat 8 Servlet Container
+After=syslog.target network.target
+ 
+[Service]
+User=tomcat
+Group=tomcat
+Type=forking
+Environment=CATALINA_PID=/opt/tomcat/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+Restart=on-failure
+ 
+[Install]
+WantedBy=multi-user.target
+ 
+•	Save & exit
+•	sudo vi /opt/tomcat/conf/tomcat-users.xml
+Add the following lines within the <tomcat-users> element  (put your own password)
+<role rolename="manager-gui"/>
+  <role rolename="admin-gui"/>
+  <user name="admin"   password="mypassword"
+                              roles="admin-gui, manager-gui,
+                              manager-script, admin-script" />
+
+•	Fix the connector, This has some issue with Jenkins if not fixed:
+•	sudo vi +68 /opt/tomcat/conf/server.xml
+•	And add this to the connector
+•	URIEncoding="UTF-8"
+
+•	Please vi $CATALINA_HOME/webapps/manager/META-IN/context.xml
+<!-- <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1|123.123.123.123" />
+-- >
+•	Do the same for this also : vi $CATALINA_HOME/webapps/host-manager/META-INF/context.xml
+•	Now you are ready to start tomcat 
+•	Sudo systemctl daemon-reload
+•	Sudo systemctl start tomcat
+Sudo systemctl enable tomcat
+
+Maven install :
+---------------
+
+sudo su -
+•	wget http://apache.spd.co.il/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+•	mv apache-maven-3.3.9-bin.tar.gz /opt/
+•	cd /opt/
+•	tar xzvf apache-maven-3.3.9-bin.tar.gz
+•	rm apache-maven-3.3.9-bin.tar.gz
+•	vim  ~/.bashrc  - and add after the Java line in Path 
+•	export PATH=$JAVA_HOME/bin:/opt/apache-maven-3.3.9/bin:$PATH
+•	source ~/.bashrc
+•	to check if mvn is working run :
+mvn –v
