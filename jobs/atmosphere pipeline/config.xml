@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.12.2">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers/>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.41">
+    <script>node {
+    notify(&apos;Started&apos;)
+    try {
+        stage(&apos;checkout&apos;) {
+            git &apos;https://github.com/lev-tmp/jenkins2-course-spring-boot.git&apos;
+        }
+        
+    
+        def project_path = &quot;spring-boot-samples/spring-boot-sample-atmosphere/&quot;
+    
+        dir(project_path) {
+    
+            stage(&apos;compiling, testing, packaging&apos;) {
+                sh &apos;mvn  clean package&apos;
+            }
+            
+            stage(&apos;archiving&apos;){
+                archiveArtifacts &quot;target/*.jar&quot;
+            }
+        }
+        
+    notify(&apos;Success&apos;)
+    
+    } catch (err) {
+        notify(&quot;Error: ${err}&quot;)
+        echo &quot;Caught: ${err}&quot;
+        currentBuild.result = &apos;FAILURE&apos;
+    }
+}
+
+def notify(status){
+    emailext (
+      to: &quot;lev.epstein@gmail.com&quot;,
+      subject: &quot;${status}: Job &apos;${env.JOB_NAME} [${env.BUILD_NUMBER}]&apos;&quot;,
+      body: &quot;&quot;&quot;&lt;p&gt;${status}: Job &apos;${env.JOB_NAME} [${env.BUILD_NUMBER}]&apos;:&lt;/p&gt;
+        &lt;p&gt;Check console output at &lt;a href=&apos;${env.BUILD_URL}&apos;&gt;${env.JOB_NAME} [${env.BUILD_NUMBER}]&lt;/a&gt;&lt;/p&gt;&quot;&quot;&quot;,
+    )
+}
+
+
+
+
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
