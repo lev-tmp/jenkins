@@ -12,7 +12,7 @@
     <script>node {
     notify(&apos;Started&apos;)
     try {
-        stage(&apos;checkout&apos;) {
+        //stage(&apos;checkout&apos;) {
             git &apos;https://github.com/lev-tmp/jenkins2-course-spring-boot.git&apos;
         }
         
