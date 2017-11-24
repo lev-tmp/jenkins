@@ -9,7 +9,7 @@
 •	sudo dpkg --configure -a
 •	sudo vi /etc/environment:
 •	Add:
-•	JAVA_HOME="/usr/lib/jvm/java-8-oracle/jre"
+•	JAVA_HOME="/usr/lib/jvm/java-8-oracle/jre" (Log out , Log in)
 •	Save & exit
 •	Sudo su - 
 •	vim  ~/.bashrc
@@ -21,11 +21,11 @@
 •	echo $JAVA_HOME
 •	groupadd tomcat
 •	useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
-•	cd /opt
-•	wget http://apache.spd.co.il/tomcat/tomcat-8/v8.5.11/bin/apache-tomcat-8.5.11.tar.gz
-•	tar -xzvf apache-tomcat-8.5.11.tar.gz
-•	 mv apache-tomcat-8.5.11 tomcat
-•	 rm apache-tomcat-8.5.11.tar.gz
+•	cd /opt   
+•	wget http://apache.spd.co.il/tomcat/tomcat-8/v8.5.23/bin/apache-tomcat-8.5.23.tar.gz
+•	tar -xzvf apache-tomcat-8.5.23.tar.gz
+•	 mv apache-tomcat-8.5.23.tar.gz tomcat 
+•	 rm apache-tomcat-8.5.23.tar.gz
 •	chown -hR tomcat:tomcat tomcat
 •	chmod +x /opt/tomcat/bin
 •	echo $CATALINA_HOME
@@ -53,18 +53,16 @@ WantedBy=multi-user.target
 •	Save & exit
 •	sudo vi /opt/tomcat/conf/tomcat-users.xml
 Add the following lines within the <tomcat-users> element  (put your own password)
-<role rolename="manager-gui"/>
-  <role rolename="admin-gui"/>
-  <user name="admin"   password="mypassword"
-                              roles="admin-gui, manager-gui,
-                              manager-script, admin-script" />
-
-•	Fix the connector, This has some issue with Jenkins if not fixed:
+  <role rolename="manager-gui"/>
+  <role rolename="admin-gui"/>
+  <user name="admin" password="123" roles="admin-gui,manager-gui,manager-script,admin-script"/>
+</tomcat-users>
+•	Fix the connector, This has some issue with Jenkiping ns if not fixed:
 •	sudo vi +68 /opt/tomcat/conf/server.xml
 •	And add this to the connector
 •	URIEncoding="UTF-8"
 
-•	Please vi $CATALINA_HOME/webapps/manager/META-IN/context.xml
+•	Please vi $CATALINA_HOME/webapps/manager/META-INF/context.xml
 <!-- <Valve className="org.apache.catalina.valves.RemoteAddrValve"
          allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1|123.123.123.123" />
 -- >
@@ -86,5 +84,6 @@ sudo su -
 •	vim  ~/.bashrc  - and add after the Java line in Path 
 •	export PATH=$JAVA_HOME/bin:/opt/apache-maven-3.3.9/bin:$PATH
 •	source ~/.bashrc
+	ln -s /opt/apache-maven-3.3.9/bin/mvn /usr/bin/mvn
 •	to check if mvn is working run :
 mvn –v
