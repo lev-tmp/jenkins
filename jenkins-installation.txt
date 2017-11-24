@@ -84,5 +84,6 @@ sudo su -
 •	vim  ~/.bashrc  - and add after the Java line in Path 
 •	export PATH=$JAVA_HOME/bin:/opt/apache-maven-3.3.9/bin:$PATH
 •	source ~/.bashrc
+	ln -s /opt/apache-maven-3.3.9/bin/mvn /usr/bin/mvn
 •	to check if mvn is working run :
 mvn –v
