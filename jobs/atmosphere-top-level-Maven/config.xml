@@ -1,10 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description></description>
+  <description>use top level Maven&#xd;
+GIT checkout&#xd;
+clean test package&#xd;
+archive the artifacts&#xd;
+publish JUnit tests&#xd;
+&#xd;
+</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
-  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.6.3">
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.6.4">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
@@ -21,8 +27,7 @@
     <submoduleCfg class="list"/>
     <extensions/>
   </scm>
-  <assignedNode>master</assignedNode>
-  <canRoam>false</canRoam>
+  <canRoam>true</canRoam>
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
@@ -31,7 +36,7 @@
   <builders>
     <hudson.tasks.Maven>
       <targets>clean test package</targets>
-      <mavenName>3.3.9</mavenName>
+      <mavenName>(Default)</mavenName>
       <pom>spring-boot-samples/spring-boot-sample-atmosphere/pom.xml</pom>
       <usePrivateRepository>false</usePrivateRepository>
       <settings class="jenkins.mvn.DefaultSettingsProvider"/>
@@ -48,7 +53,7 @@
       <defaultExcludes>true</defaultExcludes>
       <caseSensitive>true</caseSensitive>
     </hudson.tasks.ArtifactArchiver>
-    <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.21">
+    <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.22.2">
       <testResults>spring-boot-samples/spring-boot-sample-atmosphere/target/surefire-reports//TEST-*.xml</testResults>
       <keepLongStdio>false</keepLongStdio>
       <healthScaleFactor>1.0</healthScaleFactor>
